@@ -1,0 +1,10 @@
+{
+  "id": "getyoutubetranscript",
+  "name": "YouTube Transcript",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.7",
+  "description": "Insert a YouTube video's transcript into a note, or create a note from it. Uses a getyoutubetranscript.com API key.",
+  "author": "tubeagentkit",
+  "authorUrl": "https://getyoutubetranscript.com",
+  "isDesktopOnly": false
+}
