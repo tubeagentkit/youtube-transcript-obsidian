@@ -30,6 +30,8 @@ Open the command palette and type `YouTube Transcript`.
 
 This plugin needs the internet. It sends the video link you give it and your API key to `getyoutubetranscript.com`, and nothing else. It has no telemetry and no ads. Transcripts are written by whoever uploaded the video, so treat them as untrusted text.
 
+The plugin requires a getyoutubetranscript.com account (for the API key), and transcripts beyond the free credits need a paid plan. The service records each request against your account to count credits; see the [privacy policy](https://getyoutubetranscript.com/privacy-policy).
+
 Works on desktop and mobile.
 
 ## Install manually
