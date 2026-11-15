@@ -1,4 +1,4 @@
-import builtins from "builtin-modules";
+import { builtinModules } from "node:module";
 import { context } from "esbuild";
 
 const watch = process.argv.includes("--watch");
@@ -10,7 +10,7 @@ const ctx = await context({
   platform: "node",
   format: "cjs",
   target: "es2020",
-  external: ["obsidian", "electron", "@codemirror/*", "@lezer/*", ...builtins],
+  external: ["obsidian", "electron", "@codemirror/*", "@lezer/*", ...builtinModules],
   logLevel: "info",
   sourcemap: watch ? "inline" : false,
   minify: !watch,

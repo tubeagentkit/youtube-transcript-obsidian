@@ -37,7 +37,7 @@ const DEFAULT_SETTINGS: YouTubeTranscriptSettings = {
   folder: "YouTube transcripts",
 };
 
-const USER_AGENT = "GetYouTubeTranscript-Obsidian/0.1.0";
+const USER_AGENT = "GetYouTubeTranscript-Obsidian/0.1.1";
 
 /** requestUrl is used instead of fetch: it ignores CORS and also works on mobile. */
 const obsidianHttp: HttpGet = async (url, headers) => {
@@ -61,7 +61,7 @@ class VideoLinkModal extends Modal {
     app: App,
     initialValue: string,
     private readonly title: string,
-    private readonly onSubmit: (video: string) => void,
+    private readonly onSubmit: (video: string) => Promise<void>,
   ) {
     super(app);
     this.value = initialValue;
@@ -75,7 +75,7 @@ class VideoLinkModal extends Modal {
         return;
       }
       this.close();
-      this.onSubmit(this.value.trim());
+      void this.onSubmit(this.value.trim());
     };
 
     new Setting(this.contentEl).setName("YouTube link").addText((text) => {
@@ -105,20 +105,21 @@ export default class YouTubeTranscriptPlugin extends Plugin {
     this.addCommand({
       id: "insert-transcript",
       name: "Insert transcript at cursor",
-      editorCallback: (editor) => this.insertTranscript(editor),
+      editorCallback: (editor) => void this.insertTranscript(editor),
     });
     this.addCommand({
       id: "create-note",
       name: "Create note from transcript",
-      callback: () => this.promptForVideo("Create note from transcript", (video) => this.createNote(video)),
+      callback: () => void this.promptForVideo("Create note from transcript", (video) => this.createNote(video)),
     });
-    this.addCommand({ id: "show-credits", name: "Show credit balance", callback: () => this.showCredits() });
+    this.addCommand({ id: "show-credits", name: "Show credit balance", callback: () => void this.showCredits() });
 
     this.addSettingTab(new YouTubeTranscriptSettingTab(this.app, this));
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const saved = (await this.loadData()) as Partial<YouTubeTranscriptSettings> | null;
+    this.settings = { ...DEFAULT_SETTINGS, ...saved };
   }
 
   async saveSettings() {
@@ -154,7 +155,7 @@ export default class YouTubeTranscriptPlugin extends Plugin {
     }
   }
 
-  private async promptForVideo(title: string, onVideo: (video: string) => void) {
+  private async promptForVideo(title: string, onVideo: (video: string) => Promise<void>) {
     new VideoLinkModal(this.app, await readClipboardLink(), title, onVideo).open();
   }
 
